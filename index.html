@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Wifu | Our Journey</title>
+    
+    <!-- Tailwind CSS for modern layout utility styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Elegant Serif (Cormorant Garamond) & Modern Sans (Plus Jakarta Sans) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Cormorant Garamond', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        obsidian: '#070709',
+                        romance: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            200: '#fecdd3',
+                            400: '#fb7185',
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                            900: '#881337',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Custom scrollbar matching dark aesthetic */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #070709;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(225, 29, 72, 0.2);
+            border-radius: 9px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(225, 29, 72, 0.5);
+        }
+
+        /* Subtle mesh background with deep velvet hues */
+        .ambient-mesh {
+            background-color: #070709;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(225, 29, 72, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(136, 19, 55, 0.15) 0px, transparent 50%),
+                radial-gradient(at 50% 50%, rgba(15, 15, 25, 1) 0px, transparent 100%);
+        }
+
+        /* Floating animations for decorative elements */
+        @keyframes gentle-float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+        .animate-float {
+            animation: gentle-float 6s infinite ease-in-out;
+        }
+
+        @keyframes heart-pulse {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(244, 63, 94, 0.4)); }
+            50% { transform: scale(1.06); filter: drop-shadow(0 0 25px rgba(244, 63, 94, 0.8)); }
+        }
+        .animate-pulse-glow {
+            animation: heart-pulse 3s infinite ease-in-out;
+        }
+
+        /* Seamless fade transitions for sections */
+        .screen-transition {
+            transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+    </style>
+</head>
+<body class="ambient-mesh text-slate-100 font-sans min-h-screen overflow-x-hidden relative selection:bg-romance-600 selection:text-white">
+
+    <!-- Interactive Canvas Particle Field (Hearts and Nebulae) -->
+    <canvas id="starfield" class="fixed inset-0 pointer-events-none z-0"></canvas>
+
+    <!-- Custom Cursor Aura (Fades and follows cursor smoothly) -->
+    <div id="cursorAura" class="fixed w-[380px] h-[380px] rounded-full bg-romance-900/10 blur-[110px] pointer-events-none -translate-x-1/2 -translate-y-1/2 transition-opacity duration-700 opacity-0 z-10 hidden md:block"></div>
+
+    <!-- Soundtrack Controls -->
+    <div class="fixed top-6 right-6 z-50">
+        <button id="musicBtn" class="bg-zinc-950/40 hover:bg-zinc-900/60 backdrop-blur-xl border border-zinc-800/80 p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-105 active:scale-95 text-romance-400 flex items-center gap-2">
+            <svg id="musicIcon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 9.75 19.5 12m0 0 2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6 4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z" />
+            </svg>
+            <span id="musicLabel" class="text-xs font-semibold tracking-wider pr-1">Soft Music</span>
+        </button>
+    </div>
+
+    <!-- MAIN GRID CONTAINER -->
+    <main class="relative z-20 min-h-screen flex flex-col items-center justify-center px-4 py-12">
+
+        <!-- SCREEN 1: THE GATEWAY (LANDING) -->
+        <section id="gateway" class="screen-transition max-w-xl text-center flex flex-col items-center justify-center space-y-8 py-12">
+            <div class="space-y-4">
+                <span class="text-romance-400 text-xs md:text-sm tracking-[0.35em] uppercase font-bold">A Space Curated For You</span>
+                <h1 class="font-serif text-5xl md:text-6xl text-white font-light leading-tight tracking-tight">
+                    For <span class="font-normal italic text-romance-200">Wifu</span>
+                </h1>
+                <p class="text-zinc-400 max-w-sm mx-auto leading-relaxed text-sm md:text-base">
+                    Every second we share is a chapter of a beautiful story. Please step inside to revisit our moments.
+                </p>
+            </div>
+
+            <!-- Unlock Trigger -->
+            <button id="unlockBtn" class="group relative flex flex-col items-center focus:outline-none transition-all duration-300">
+                <div class="animate-pulse-glow flex items-center justify-center bg-gradient-to-tr from-romance-600 to-rose-950 w-20 h-20 rounded-full shadow-[0_0_30px_rgba(225,29,72,0.3)] relative z-10 transition-transform duration-300 group-hover:scale-105">
+                    <!-- Subtle Heart Icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8 text-white">
+                        <path d="m11.645 20.91-.007-.003-.003-.001a.752.752 0 0 1-.704 0l-.003.001-.007.003-1.07.54a22.257 22.257 0 0 1-1.688-2.6C6.186 16.242 4.5 13.205 4.5 9.75 4.5 5.91 7.59 3 11.375 3c2.04 0 3.868.89 5.11 2.29A5.857 5.857 0 0 1 21.625 9.75c0 3.455-1.686 6.492-3.672 9.157a22.251 22.251 0 0 1-1.688 2.6l-1.07-.54ZM12 15.75a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5Z" />
+                    </svg>
+                </div>
+                <div class="absolute inset-0 bg-romance-600 rounded-full blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
+                <span class="mt-4 text-xs font-semibold tracking-[0.2em] text-romance-400 uppercase transition-colors group-hover:text-romance-200">Unlock Our Universe</span>
+            </button>
+        </section>
+
+
+        <!-- SCREEN 2: MAIN JOURNEY (Initially Hidden) -->
+        <section id="journey" class="screen-transition hidden opacity-0 translate-y-8 max-w-4xl w-full flex flex-col items-center space-y-16 py-8">
+            
+            <!-- Date Banner -->
+            <div class="text-center space-y-3">
+                <span class="text-romance-400 text-xs md:text-sm tracking-[0.4em] uppercase font-bold">The Journey of Us</span>
+                <h2 class="font-serif text-4xl md:text-6xl text-white font-medium tracking-tight">
+                    Since July 27, 2023
+                </h2>
+                <div class="w-20 h-[1px] bg-gradient-to-r from-transparent via-romance-500 to-transparent mx-auto mt-4"></div>
+            </div>
+
+            <!-- Dynamic Anniversary Live Counter -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 w-full max-w-2xl px-4">
+                <!-- Days Card -->
+                <div class="bg-zinc-950/30 backdrop-blur-xl border border-zinc-900 rounded-2xl p-6 text-center shadow-2xl relative overflow-hidden group hover:border-romance-500/30 transition-all duration-500">
+                    <div class="absolute -top-12 -right-12 w-24 h-24 bg-romance-500/5 rounded-full blur-xl group-hover:bg-romance-500/10 transition-colors duration-500"></div>
+                    <span id="days" class="block font-serif text-4xl md:text-5xl font-bold text-romance-200">00</span>
+                    <span class="text-[10px] uppercase tracking-widest text-zinc-500 mt-2 block font-semibold">Days</span>
+                </div>
+                <!-- Hours Card -->
+                <div class="bg-zinc-950/30 backdrop-blur-xl border border-zinc-900 rounded-2xl p-6 text-center shadow-2xl relative overflow-hidden group hover:border-romance-500/30 transition-all duration-500">
+                    <div class="absolute -top-12 -right-12 w-24 h-24 bg-romance-500/5 rounded-full blur-xl group-hover:bg-romance-500/10 transition-colors duration-500"></div>
+                    <span id="hours" class="block font-serif text-4xl md:text-5xl font-bold text-romance-200">00</span>
+                    <span class="text-[10px] uppercase tracking-widest text-zinc-500 mt-2 block font-semibold">Hours</span>
+                </div>
+                <!-- Minutes Card -->
+                <div class="bg-zinc-950/30 backdrop-blur-xl border border-zinc-900 rounded-2xl p-6 text-center shadow-2xl relative overflow-hidden group hover:border-romance-500/30 transition-all duration-500">
+                    <div class="absolute -top-12 -right-12 w-24 h-24 bg-romance-500/5 rounded-full blur-xl group-hover:bg-romance-500/10 transition-colors duration-500"></div>
+                    <span id="minutes" class="block font-serif text-4xl md:text-5xl font-bold text-romance-200">00</span>
+                    <span class="text-[10px] uppercase tracking-widest text-zinc-500 mt-2 block font-semibold">Minutes</span>
+                </div>
+                <!-- Seconds Card -->
+                <div class="bg-zinc-950/30 backdrop-blur-xl border border-zinc-900 rounded-2xl p-6 text-center shadow-2xl relative overflow-hidden group hover:border-romance-500/30 transition-all duration-500">
+                    <div class="absolute -top-12 -right-12 w-24 h-24 bg-romance-500/5 rounded-full blur-xl group-hover:bg-romance-500/10 transition-colors duration-500"></div>
+                    <span id="seconds" class="block font-serif text-4xl md:text-5xl font-bold text-romance-400">00</span>
+                    <span class="text-[10px] uppercase tracking-widest text-zinc-500 mt-2 block font-semibold">Seconds</span>
+                </div>
+            </div>
+
+            <!-- Intermediary Quote -->
+            <p class="text-zinc-400 text-center font-serif italic text-lg max-w-lg px-6 leading-relaxed animate-float">
+                "In all the world, there is no heart for me like yours. In all the world, there is no love for you like mine."
+                <span class="block text-[10px] uppercase font-sans not-italic tracking-widest text-romance-400 mt-3 font-bold">— Maya Angelou</span>
+            </p>
+
+            <!-- Custom Letters & Micro-Moments Grid -->
+            <div class="w-full max-w-2xl px-4 flex flex-col items-center">
+                <h3 class="text-[10px] tracking-[0.35em] text-zinc-500 uppercase font-bold mb-6 text-center">Interactive Memories: Click to Open</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+                    <!-- Card 1 -->
+                    <button class="memory-btn bg-zinc-950/30 hover:bg-zinc-900/40 border border-zinc-900 rounded-xl p-5 text-left transition-all duration-300 hover:border-romance-500/20 hover:-translate-y-1 group" data-card="0">
+                        <div class="text-romance-400 text-xl mb-2">💫</div>
+                        <h4 class="text-white text-sm font-semibold mb-1 group-hover:text-romance-300 transition-colors">How It Began</h4>
+                        <p class="text-zinc-500 text-xs leading-relaxed">The quiet day that shifted our orbits forever...</p>
+                    </button>
+                    <!-- Card 2 -->
+                    <button class="memory-btn bg-zinc-950/30 hover:bg-zinc-900/40 border border-zinc-900 rounded-xl p-5 text-left transition-all duration-300 hover:border-romance-500/20 hover:-translate-y-1 group" data-card="1">
+                        <div class="text-romance-400 text-xl mb-2">🌿</div>
+                        <h4 class="text-white text-sm font-semibold mb-1 group-hover:text-romance-300 transition-colors">Our Safe Space</h4>
+                        <p class="text-zinc-500 text-xs leading-relaxed">Finding sanctuary in the warmth of your smile...</p>
+                    </button>
+                    <!-- Card 3 -->
+                    <button class="memory-btn bg-zinc-950/30 hover:bg-zinc-900/40 border border-zinc-900 rounded-xl p-5 text-left transition-all duration-300 hover:border-romance-500/20 hover:-translate-y-1 group" data-card="2">
+                        <div class="text-romance-400 text-xl mb-2">🌹</div>
+                        <h4 class="text-white text-sm font-semibold mb-1 group-hover:text-romance-300 transition-colors">My Promise</h4>
+                        <p class="text-zinc-500 text-xs leading-relaxed">The silent vows I hold close to my heart every single day...</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- The Love Letter Card (Ultra Glassmorphism design) -->
+            <div class="w-full max-w-2xl px-4">
+                <div class="relative bg-zinc-950/50 backdrop-blur-2xl border border-zinc-900 rounded-3xl p-8 md:p-12 shadow-[0_0_50px_rgba(0,0,0,0.8)] overflow-hidden">
+                    <div class="absolute top-0 right-0 w-48 h-48 bg-romance-500/5 rounded-full blur-[80px] pointer-events-none"></div>
+                    <div class="absolute bottom-0 left-0 w-48 h-48 bg-romance-900/5 rounded-full blur-[80px] pointer-events-none"></div>
+                    
+                    <div class="relative space-y-8">
+                        <div class="flex items-center justify-between border-b border-zinc-900 pb-6">
+                            <span class="text-xs font-semibold tracking-[0.25em] text-romance-400 uppercase">A Love Letter to Wifu</span>
+                            <!-- Miniature Heart SVG Decor -->
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-romance-500/40">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
+                            </svg>
+                        </div>
+
+                        <!-- Typing Container / Elegant Editorial Copy -->
+                        <div class="font-serif text-lg md:text-xl text-zinc-200 leading-relaxed space-y-6">
+                            <p>My Dearest Wifu,</p>
+                            <p class="indent-6 leading-loose">
+                                When we marked our beginning on <span class="text-romance-300 font-semibold font-sans text-xs px-2 py-1 rounded bg-romance-950/40 border border-romance-500/10">July 27, 2023</span>, I could only begin to guess how beautifully my life was going to transform. Looking back today, every shared laugh, every late night conversation, and every comfortable silence has woven together to form the happiest years of my existence.
+                            </p>
+                            <p class="indent-6 leading-loose">
+                                <strong class="text-romance-300 font-medium">Thank you for being with me.</strong> Thank you for your warmth on cold days, for the unwavering patience you show me, and for simply being who you are. You make our world a place of peace and absolute light. My heart has found its gentle home in you.
+                            </p>
+                            <p class="indent-6 leading-loose">
+                                As the timer ticks forward into tomorrow, my promise remains absolute: I will choose you, love you, and stand by you in every chapter of our lives. 
+                            </p>
+                            <p class="text-right mt-8 pt-6 font-sans text-xs tracking-[0.25em] text-romance-400 uppercase font-semibold">
+                                Forever & Always
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Love Signature -->
+            <div class="flex flex-col items-center space-y-2 pb-12">
+                <span class="text-[10px] uppercase tracking-widest text-zinc-600 font-bold">Crafted with devotion for you</span>
+                <span class="text-lg text-romance-500/40">✨❤️✨</span>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- INTERACTIVE MEMORY MODAL -->
+    <div id="modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-obsidian/85 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-zinc-950 border border-zinc-900 rounded-2xl max-w-md w-full p-8 shadow-2xl relative transform translate-y-4 transition-transform duration-300">
+            <!-- Close icon -->
+            <button id="closeBtn" class="absolute top-4 right-4 text-zinc-500 hover:text-zinc-300 transition-colors focus:outline-none">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <div class="space-y-4">
+                <span id="modalIcon" class="text-4xl block">✨</span>
+                <h4 id="modalTitle" class="font-serif text-2xl text-white font-semibold">Card Title</h4>
+                <p id="modalText" class="text-zinc-400 text-sm leading-relaxed">Card details will dynamically render here.</p>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // 1. CHRONOLOGY CONFIGURATION
+        const ANNIVERSARY_DATE = "2023-07-27T00:00:00"; 
+        
+        // 2. ELEMENT HANDLES
+        const gateway = document.getElementById('gateway');
+        const journey = document.getElementById('journey');
+        const unlockBtn = document.getElementById('unlockBtn');
+        const musicBtn = document.getElementById('musicBtn');
+        const musicIcon = document.getElementById('musicIcon');
+        const musicLabel = document.getElementById('musicLabel');
+        const cursorAura = document.getElementById('cursorAura');
+        const starfield = document.getElementById('starfield');
+        
+        const modal = document.getElementById('modal');
+        const closeBtn = document.getElementById('closeBtn');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalText = document.getElementById('modalText');
+        const modalIcon = document.getElementById('modalIcon');
+
+        // Cards data for Wifu
+        const cardsData = [
+            {
+                icon: "💫",
+                title: "How It Began",
+                text: "On July 27, 2023, the stars aligned to write our story. Ever since that day, my life has been enriched with meaning, joy, and a feeling of alignment that I hadn't felt before."
+            },
+            {
+                icon: "🌿",
+                title: "Our Safe Space",
+                text: "No matter how turbulent or busy life gets, knowing you are here brings me back to safe shores. Thank you for being my anchor, my best friend, and my comfort."
+            },
+            {
+                icon: "🌹",
+                title: "My Promise",
+                text: "I promise to match your kindness with loyalty, to support you in every dream you chase, and to love you with complete honesty, every single day."
+            }
+        ];
+
+        // 3. ENTER JOURNEY (Transition and Setup)
+        unlockBtn.addEventListener('click', () => {
+            // Fade gateway out
+            gateway.style.opacity = '0';
+            gateway.style.transform = 'translateY(-15px)';
+            
+            // Safe initialization of sound synthesizer
+            setupAudioSynth();
+            
+            setTimeout(() => {
+                gateway.classList.add('hidden');
+                journey.classList.remove('hidden');
+                
+                // Trigger smooth fade in of journey elements
+                setTimeout(() => {
+                    journey.style.opacity = '1';
+                    journey.style.transform = 'translateY(0)';
+                }, 50);
+            }, 800);
+        });
+
+        // 4. LIVE TIMER ENGINE
+        function computeTime() {
+            const start = new Date(ANNIVERSARY_DATE).getTime();
+            const current = new Date().getTime();
+            const difference = current - start;
+
+            if (difference < 0) return;
+
+            const daysVal = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const hoursVal = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutesVal = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const secondsVal = Math.floor((difference % (1000 * 60)) / 1000);
+
+            document.getElementById('days').innerText = String(daysVal).padStart(2, '0');
+            document.getElementById('hours').innerText = String(hoursVal).padStart(2, '0');
+            document.getElementById('minutes').innerText = String(minutesVal).padStart(2, '0');
+            document.getElementById('seconds').innerText = String(secondsVal).padStart(2, '0');
+        }
+        setInterval(computeTime, 1000);
+        computeTime(); // Instant trigger on load
+
+        // 5. INTERACTIVE CARDS EVENT HANDLERS
+        document.querySelectorAll('.memory-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const index = btn.getAttribute('data-card');
+                const card = cardsData[index];
+                
+                modalIcon.innerText = card.icon;
+                modalTitle.innerText = card.title;
+                modalText.innerText = card.text;
+                
+                modal.classList.remove('pointer-events-none');
+                modal.classList.add('opacity-100');
+                modal.firstElementChild.classList.remove('translate-y-4');
+                modal.firstElementChild.classList.add('translate-y-0');
+            });
+        });
+
+        const hideModal = () => {
+            modal.classList.add('pointer-events-none');
+            modal.classList.remove('opacity-100');
+            modal.firstElementChild.classList.remove('translate-y-0');
+            modal.firstElementChild.classList.add('translate-y-4');
+        };
+
+        closeBtn.addEventListener('click', hideModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) hideModal();
+        });
+
+        // 6. AMBIENT MOUSE GLOW DECORATIVE EFFECT
+        document.addEventListener('mousemove', (e) => {
+            cursorAura.style.opacity = '1';
+            cursorAura.style.left = `${e.clientX}px`;
+            cursorAura.style.top = `${e.clientY}px`;
+        });
+        document.addEventListener('mouseleave', () => {
+            cursorAura.style.opacity = '0';
+        });
+
+        // 7. CANVAS PARTICLE SIMULATOR (Drifting Stars & Hearts)
+        const ctx = starfield.getContext('2d');
+        let starList = [];
+        const isMobileDevice = window.innerWidth < 768;
+        const starLimit = isMobileDevice ? 20 : 55;
+
+        function adaptCanvas() {
+            starfield.width = window.innerWidth;
+            starfield.height = window.innerHeight;
+        }
+        adaptCanvas();
+        window.addEventListener('resize', adaptCanvas);
+
+        class CosmicStar {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * starfield.width;
+                this.y = starfield.height + Math.random() * 100;
+                this.dimensions = Math.random() * 10 + 5;
+                this.yVel = -(Math.random() * 0.7 + 0.25);
+                this.xVel = Math.random() * 0.3 - 0.15;
+                this.transparency = Math.random() * 0.3 + 0.1;
+                this.shape = Math.random() > 0.65 ? 'heart' : 'orb';
+                this.oscillationSpeed = Math.random() * 0.01 + 0.005;
+                this.oscillation = 0;
+            }
+
+            update() {
+                this.y += this.yVel;
+                this.x += this.xVel;
+                this.oscillation += this.oscillationSpeed;
+
+                if (this.y < -40) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.transparency + (Math.sin(this.oscillation) * 0.06);
+                ctx.fillStyle = `rgba(244, 63, 94, ${this.transparency})`;
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = 'rgba(244, 63, 94, 0.3)';
+
+                if (this.shape === 'heart') {
+                    ctx.beginPath();
+                    const d = this.dimensions;
+                    const x = this.x;
+                    const y = this.y;
+                    ctx.moveTo(x, y + d / 4);
+                    ctx.quadraticCurveTo(x, y, x + d / 4, y);
+                    ctx.quadraticCurveTo(x + d / 2, y, x + d / 2, y + d / 4);
+                    ctx.quadraticCurveTo(x + d / 2, y, x + d * 3/4, y);
+                    ctx.quadraticCurveTo(x + d, y, x + d, y + d / 4);
+                    ctx.quadraticCurveTo(x + d, y + d * 5/8, x + d / 2, y + d);
+                    ctx.quadraticCurveTo(x, y + d * 5/8, x, y + d / 4);
+                    ctx.closePath();
+                    ctx.fill();
+                } else {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.dimensions / 2.5, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.restore();
+            }
+        }
+
+        function createStars() {
+            for (let i = 0; i < starLimit; i++) {
+                starList.push(new CosmicStar());
+            }
+        }
+
+        function renderLoop() {
+            ctx.clearRect(0, 0, starfield.width, starfield.height);
+            starList.forEach(s => {
+                s.update();
+                s.draw();
+            });
+            requestAnimationFrame(renderLoop);
+        }
+
+        createStars();
+        renderLoop();
+
+
+        // 8. SOOTHING AMBIENT MUSIC SYNTHESIZER (Web Audio API)
+        let audioContext = null;
+        let ambientState = false;
+        let ambientLoop = null;
+
+        // Fmaj9 -> Cmaj9 -> Bbmaj9 -> Am7 (Warm, comforting acoustic chord design)
+        const progression = [
+            [174.61, 220.00, 261.63, 329.63, 349.23], // Fmaj9
+            [261.63, 329.63, 392.00, 493.88, 523.25], // Cmaj9
+            [116.54, 146.83, 174.61, 220.00, 233.08], // Bbmaj9
+            [110.00, 130.81, 164.81, 196.00, 220.00]  // Am7
+        ];
+
+        let activeChordIndex = 0;
+
+        function emitNote(freq, duration, delay) {
+            if (!audioContext) return;
+
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            const filter = audioContext.createBiquadFilter();
+
+            osc.connect(filter);
+            filter.connect(gain);
+            gain.connect(audioContext.destination);
+
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, audioContext.currentTime + delay);
+
+            filter.type = 'lowpass';
+            // Keeping sound incredibly soft, warm, and dark
+            filter.frequency.setValueAtTime(650, audioContext.currentTime);
+
+            const attack = 1.2;
+            const decay = duration - attack;
+
+            gain.gain.setValueAtTime(0, audioContext.currentTime + delay);
+            gain.gain.linearRampToValueAtTime(0.035, audioContext.currentTime + delay + attack);
+            gain.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + delay + duration);
+
+            osc.start(audioContext.currentTime + delay);
+            osc.stop(audioContext.currentTime + delay + duration);
+        }
+
+        function playArpeggio() {
+            const currentChord = progression[activeChordIndex];
+            // Render individual notes with a staggered delay to sound like a gentle strum
+            currentChord.forEach((note, index) => {
+                emitNote(note, 6.5, index * 0.45);
+            });
+            activeChordIndex = (activeChordIndex + 1) % progression.length;
+        }
+
+        function setupAudioSynth() {
+            if (ambientState) return;
+
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            ambientState = true;
+            playArpeggio();
+            ambientLoop = setInterval(playArpeggio, 5800);
+
+            // Toggle visuals
+            musicLabel.innerText = "Music On";
+            musicIcon.innerHTML = `
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 0 1 0 12.728M16.463 8.288a5.25 5.25 0 0 1 0 7.424M6.75 8.25l4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z" />
+            `;
+        }
+
+        function silenceAudioSynth() {
+            if (!ambientState) return;
+            ambientState = false;
+            clearInterval(ambientLoop);
+
+            musicLabel.innerText = "Music Off";
+            musicIcon.innerHTML = `
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 9.75 19.5 12m0 0 2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6 4.72-4.72a.75.75 0 0 1 1.28.53v15.88a.75.75 0 0 1-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 0 1 2.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75Z" />
+            `;
+        }
+
+        musicBtn.addEventListener('click', () => {
+            if (ambientState) {
+                silenceAudioSynth();
+            } else {
+                setupAudioSynth();
+            }
+        });
+
+    </script>
+</body>
+</html>
